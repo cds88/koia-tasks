@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FormProvider, useForm } from "react-hook-form";
+import Graph from "./components/Graph";
+import { useApi } from "./hooks/useApi";
+import "./styles/App.css";
+
+import ContentsSelector from "./components/ContentsSelector";
+import QuarterSelector from "./components/QuarterSelector";
+import TypeOfDwellingSelector from "./components/TypeOfDwellingSelector";
+
+import { GraphsWrapper, InputsWrapper } from "./styled";
+import { FormType } from "./types";
+import ShowHistoryButton from "./components/ShowHistoryButton";
+
+const defaultFormState: FormType = {
+  houseType: [],
+  quartersRange: [],
+  contents: [],
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const formMethods = useForm<FormType>({
+    defaultValues: defaultFormState,
+  });
+  useApi(formMethods);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <FormProvider {...formMethods}>
+      <InputsWrapper>
+        <QuarterSelector />
+        <TypeOfDwellingSelector />
+        <ContentsSelector />
+      </InputsWrapper>
+      <GraphsWrapper>
+        <Graph />
+      </GraphsWrapper>
+      <ShowHistoryButton/>
+    </FormProvider>
+  );
 }
 
-export default App
+export default App;
